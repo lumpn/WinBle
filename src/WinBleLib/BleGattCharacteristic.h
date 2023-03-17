@@ -48,8 +48,6 @@ class BleGattCharacteristic
 
 		PBTH_LE_GATT_SERVICE _pGattService;
 
-		USHORT _gattDescriptorsCount = 0;
-
 		CallbackContext _callbackContext;
 
 		BleDeviceContext& _bleDeviceContext;
