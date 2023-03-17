@@ -157,8 +157,7 @@ PBTH_LE_GATT_SERVICE BleDevice::getGattServices(HANDLE _hBleDeviceHandle, USHORT
 
 BleDevice::BleDevice(const wstring& deviceInstanceId) : 
 	_hBleDevice(new HandleWrapper(getBleDeviceHandle(deviceInstanceId))), 
-	_deviceContext(_hBleDevice->get(), deviceInstanceId),
-	_deviceInstanceId(deviceInstanceId)
+	_deviceContext(_hBleDevice->get(), deviceInstanceId)
 {
 }
 
@@ -173,7 +172,7 @@ BleDevice::~BleDevice()
 
 wstring BleDevice::getDeviceIntstanceId() const
 {
-	return _deviceInstanceId;
+	return _deviceContext.getDeviceInstanceId();
 }
 
 void BleDevice::enumerateBleServices()

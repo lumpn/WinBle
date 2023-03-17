@@ -45,8 +45,6 @@ class BleDevice
 	private:
 		HandleWrapper* _hBleDevice = nullptr;
 
-		wstring _deviceInstanceId;
-
 		BleDeviceContext _deviceContext;
 
 		list<shared_ptr<BleGattService>> _bleGattServices;
