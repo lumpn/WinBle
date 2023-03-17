@@ -38,8 +38,6 @@ private:
 
 	HandleWrapper(const HandleWrapper &obj);
 
-	HandleWrapper& HandleWrapper::operator=(const HandleWrapper& other);
-
 public:
 	explicit HandleWrapper(HANDLE handle);
 
