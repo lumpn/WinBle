@@ -64,10 +64,6 @@ HANDLE BleDevice::getBleDeviceHandle(const wstring& deviceInstanceId)
 
 	for (i = 0; SetupDiEnumDeviceInterfaces(hDI, nullptr, &GUID_BLUETOOTHLE_DEVICE_INTERFACE, i, &did); i++)
 	{
-		SP_DEVICE_INTERFACE_DETAIL_DATA DeviceInterfaceDetailData{};
-
-		DeviceInterfaceDetailData.cbSize = sizeof(SP_DEVICE_INTERFACE_DETAIL_DATA);
-
 		DWORD size = 0;
 
 		if (!SetupDiGetDeviceInterfaceDetail(hDI, &did, nullptr, 0, &size, nullptr))
@@ -134,13 +130,6 @@ PBTH_LE_GATT_SERVICE BleDevice::getGattServices(HANDLE _hBleDeviceHandle, USHORT
 
 		throw BleException(msg.str());
 	}
-
-	hr = BluetoothGATTGetServices(
-		_hBleDeviceHandle,
-		0,
-		nullptr,
-		_pGattServiceCount,
-		BLUETOOTH_GATT_FLAG_NONE);
 
 	auto pServiceBuffer = (PBTH_LE_GATT_SERVICE)
 		malloc(sizeof(BTH_LE_GATT_SERVICE) * *_pGattServiceCount);

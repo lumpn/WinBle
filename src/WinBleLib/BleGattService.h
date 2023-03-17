@@ -43,8 +43,6 @@ class BleGattService
 {
 	private:
 		
-		shared_ptr<HandleWrapper> _hBleService;
-
 		BleDeviceContext& _bleDeviceContext;
 
 		USHORT _gattCharacteristicsCount = 0;

@@ -72,10 +72,6 @@ HANDLE openBleInterfaceHandle(GUID interfaceUUID, DWORD dwDesiredAccess)
 
 	for (DWORD i = 0; SetupDiEnumDeviceInterfaces(hDI, nullptr, &BluetoothInterfaceGUID, i, &did); i++)
 	{
-		SP_DEVICE_INTERFACE_DETAIL_DATA DeviceInterfaceDetailData{};
-
-		DeviceInterfaceDetailData.cbSize = sizeof(SP_DEVICE_INTERFACE_DETAIL_DATA);
-
 		DWORD size = 0;
 
 		if (!SetupDiGetDeviceInterfaceDetail(hDI, &did, nullptr, 0, &size, nullptr))
