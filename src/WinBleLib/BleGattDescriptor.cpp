@@ -55,7 +55,6 @@ BleGattDescriptor::BleGattDescriptor(
 	BleDeviceContext& bleDeviceContext,
 	PBTH_LE_GATT_SERVICE pGattService,
 	PBTH_LE_GATT_DESCRIPTOR pGattDescriptor) :
-	_bleDeviceContext(bleDeviceContext),
 	_pGattService(pGattService)
 {
 	if (!pGattDescriptor)

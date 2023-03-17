@@ -45,8 +45,6 @@ class BleGattDescriptor
 		
 		PBTH_LE_GATT_SERVICE _pGattService;
 
-		BleDeviceContext& _bleDeviceContext;
-
 		PBTH_LE_GATT_DESCRIPTOR _pGattDescriptor = nullptr;
 
 		void setDescriptorValue(PBTH_LE_GATT_DESCRIPTOR_VALUE value);
