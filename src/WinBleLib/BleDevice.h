@@ -51,8 +51,6 @@ class BleDevice
 
 		list<shared_ptr<BleGattService>> _bleGattServices;
 
-		USHORT _gattServiceCount = 0;
-
 		PBTH_LE_GATT_SERVICE _pGattServiceBuffer = nullptr;
 	
 		static HANDLE getBleDeviceHandle(const wstring & deviceInstanceId);

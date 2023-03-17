@@ -183,9 +183,10 @@ void BleDevice::enumerateBleServices()
 	if (_pGattServiceBuffer)
 		free(_pGattServiceBuffer);
 
-	_pGattServiceBuffer = getGattServices(_hBleDevice->get(), &_gattServiceCount);
+	USHORT gattServiceCount = 0;
+	_pGattServiceBuffer = getGattServices(_hBleDevice->get(), &gattServiceCount);
 
-	for (size_t i = 0; i < _gattServiceCount; i++)
+	for (size_t i = 0; i < gattServiceCount; i++)
 		_bleGattServices.push_back(make_shared<BleGattService>(_deviceContext, &_pGattServiceBuffer[i]));
 }
 
