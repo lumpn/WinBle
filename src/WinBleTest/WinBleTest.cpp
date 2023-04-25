@@ -47,15 +47,26 @@ static const GUID UUID_TX_CHARACTERISTIC = { 0x49535343, 0x1E4D, 0x4BD9,{ 0xBA, 
 
 void HandleCallback(BleGattNotificationData& data)
 {
-	cout << "Received callback data: " << data.getDataSize() << "Value: " << data.getData() << endl;
+	cout << "Received callback data: " << std::dec << data.getDataSize() << ", Value: ";
+
+	auto buffer = data.getData();
+	for (int i = 0; i < data.getDataSize(); i++)
+	{
+		unsigned char v = buffer[i];
+		std::cout << std::hex << (int)v << " ";
+	}
+	std::cout << std::endl;
+
+	int16_t value = *((int16_t*)(&(data.getData()[2])));
+	cout << "Power data: " << std::dec << value << endl;
 }
 
-void readCharacteristicValueAndDisplay(BleGattService::BleGattCharacteristics const &characteristics, USHORT uuid)
+void readCharacteristicValueAndDisplay(BleGattService::BleGattCharacteristics const& characteristics, USHORT uuid)
 {
-	auto cit = find_if(begin(characteristics), end(characteristics), [&](shared_ptr<BleGattCharacteristic> const &c)
-	{
-		return c->getCharacteristicUuid().Value.ShortUuid == uuid;
-	});
+	auto cit = find_if(begin(characteristics), end(characteristics), [&](shared_ptr<BleGattCharacteristic> const& c)
+		{
+			return c->getCharacteristicUuid().Value.ShortUuid == uuid;
+		});
 
 	if (cit != characteristics.end())
 	{
@@ -67,7 +78,7 @@ void readCharacteristicValueAndDisplay(BleGattService::BleGattCharacteristics co
 	}
 }
 
-void displayServices(BleDevice const &bleDevice)
+void displayServices(BleDevice const& bleDevice)
 {
 	cout << "BleGattServices Count: " << bleDevice.getBleGattServices().size() << endl;
 
@@ -101,9 +112,9 @@ void displayServices(BleDevice const &bleDevice)
 void displayDeviceInformation(BleDevice::BleGattServices const& services)
 {
 	auto it = find_if(begin(services), end(services), [&](shared_ptr<BleGattService> const& s)
-	{
-		return s->getServiceUuid().Value.ShortUuid == GATT_UUID_DEVICE_INFO_SVC;
-	});
+		{
+			return s->getServiceUuid().Value.ShortUuid == GATT_UUID_DEVICE_INFO_SVC;
+		});
 
 	if (it != services.end())
 	{
@@ -124,9 +135,11 @@ void displayDeviceInformation(BleDevice::BleGattServices const& services)
 void testSerialService(BleDevice::BleGattServices const& services)
 {
 	auto it = find_if(begin(services), end(services), [&](shared_ptr<BleGattService> const& s)
-	{
-		return s->getServiceUuid().Value.LongUuid == UUID_SERIAL_SERVICE;
-	});
+		{
+			return s->getServiceUuid().Value.ShortUuid == 0x1826U;
+			//			return s->getServiceUuid().Value.ShortUuid == 0x1818U;
+						//		return s->getServiceUuid().Value.LongUuid == UUID_SERIAL_SERVICE;
+		});
 
 	if (it != services.end())
 	{
@@ -134,12 +147,16 @@ void testSerialService(BleDevice::BleGattServices const& services)
 
 		cout << "Found Serial Service: [" << setbase(16) << Utility::guidToString(service->getServiceUuid().Value.LongUuid) << "]" << endl;
 
+		service->enumerateBleCharacteristics();
 		BleGattService::BleGattCharacteristics const& characteristics = service->getBleCharacteristics();
 
 		auto txit = find_if(begin(characteristics), end(characteristics), [&](shared_ptr<BleGattCharacteristic> const& c)
-		{
-			return c->getCharacteristicUuid().Value.LongUuid == UUID_TX_CHARACTERISTIC;
-		});
+			{
+				return c->getCharacteristicUuid().Value.ShortUuid == 0x2AD1;
+				//return c->getCharacteristicUuid().Value.ShortUuid == 0x2AD2;
+	//			return c->getCharacteristicUuid().Value.ShortUuid == 0x2A63;
+				//						return c->getCharacteristicUuid().Value.LongUuid == UUID_TX_CHARACTERISTIC;
+			});
 
 		if (txit != characteristics.end())
 		{
@@ -150,8 +167,8 @@ void testSerialService(BleDevice::BleGattServices const& services)
 				<< Utility::guidToString(characteristic->getCharacteristicUuid().Value.LongUuid)
 				<< "] writing to characteristic" << endl;
 
-			UCHAR values[] = { 'H', 'I', '\r', '\n' };
-			characteristic->setValue(values, 4);
+			//			UCHAR values[] = { 'H', 'I', '\r', '\n' };
+			//			characteristic->setValue(values, 4);
 
 			const std::function<void(BleGattNotificationData&)> callback = HandleCallback;
 
@@ -198,33 +215,34 @@ int main()
 	{
 		BleDeviceEnumerator::enumerate();
 
-		for (BleDeviceInfo const *i : BleDeviceEnumerator::getBleDevices())
+		for (BleDeviceInfo const* i : BleDeviceEnumerator::getBleDevices())
 			wcout << "Name: " << i->getName()
 			<< " HardwareId: " << i->getHardwareId()
 			<< " InstanceId: " << i->getInstanceId() << endl;
-		
-		if (BleDeviceEnumerator::getBleDevices().size() >= 1)
+
+		for (auto bleDeviceEntry : BleDeviceEnumerator::getBleDevices())
 		{
 			cout << "Opening device" << endl;
 
-			auto bleDevice = BleDevice(BleDeviceEnumerator::getBleDevices().front()->getInstanceId());
+			//			auto bleDevice = BleDevice(BleDeviceEnumerator::getBleDevices().front()->getInstanceId());
+			auto bleDevice = BleDevice(bleDeviceEntry->getInstanceId());
 
 			bleDevice.enumerateBleServices();
 
 			displayServices(bleDevice);
 
-			BleDevice::BleGattServices const &services = bleDevice.getBleGattServices();
+			BleDevice::BleGattServices const& services = bleDevice.getBleGattServices();
 
 			displayDeviceInformation(services);
 
 			testSerialService(services);
 		}
-		else
+		//		else
 		{
 			cout << "No devices found" << endl;
 		}
 	}
-	catch (BleException const &e)
+	catch (BleException const& e)
 	{
 		cout << endl << "An error occurred:" << endl;
 		cout << "  [" << e.what() << "]" << endl;

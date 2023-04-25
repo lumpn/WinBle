@@ -44,14 +44,14 @@ class BleDeviceContext
 		
 		wstring _deviceInstanceId;
 
-	public:
+public:
 		/// <summary>
 		/// A <see cref="BleDeviceContext"/>
 		/// </summary>
 		/// <param name="hBleDevice">The device handle</param>
 		/// <param name="deviceInstanceId">The device instance Id</param>
 		explicit BleDeviceContext(HANDLE hBleDevice, const wstring& deviceInstanceId);
-		
+
 		~BleDeviceContext();
 
 		/// <summary>

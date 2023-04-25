@@ -60,7 +60,7 @@ class BleDevice
 		static PBTH_LE_GATT_SERVICE getGattServices(HANDLE hBleDeviceHandle, 
 			USHORT * pGattServiceCount);
 
-	public:
+public:
 		/// <summary>
 		/// Constructs an instance of a <see cref="BleDevice"/>
 		/// </summary>
